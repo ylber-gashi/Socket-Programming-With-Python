@@ -67,7 +67,7 @@ def GAME():
         y = random.randint(1, 36)
         if y not in lista:
             lista.append(y)
-
+    lista.sort()
     listToStr = ', '.join([str(elem) for elem in lista])
     return listToStr
 
@@ -119,7 +119,10 @@ def CALCULATE(x, op,
 def password(gjatesia):
     gjatesia = int(gjatesia)
     chars = string.ascii_letters + string.digits + string.punctuation
-    return ''.join(random.choice(chars) for _ in range(gjatesia))
+    lista = []
+    for x in range(gjatesia):
+        lista.append(random.choice(chars))
+    return ''.join(lista)
 
 
 # ----------------------------------------------------------------------------------------
@@ -132,10 +135,9 @@ def ThreadedServer(conn, address):
 
             data = (conn.recv(128)).upper()  # te dhenat qe i ka derguar klienti pranohen dhe cdo shkronje behet e madhe
             data = data.decode()
-            print("\nKerkesa: " + data)
+            print("\nKerkesa nga klienti me IP: " + str(address[0] + " dhe Port: " + str(address[1]) + "\n" + data))
             args = data.split()
-            gjatesia = len(
-                args)  # ketu e ruajme numrin e argumenteve qe i ka derguar klienti, me ane te se ciles validohet kerkesa me poshte
+            gjatesia = len(args)  # ketu e ruajme numrin e argumenteve qe i ka derguar klienti, me ane te se ciles validohet kerkesa me poshte
             kerkesa = args[0]
 
             if kerkesa == "IPADDRESS":
@@ -161,7 +163,7 @@ def ThreadedServer(conn, address):
                 text = args[1]
                 conn.send(str.encode(PALINDROME(text)))
             elif kerkesa == "CONVERT":
-                number = int(args[1])
+                number = float(args[1])
                 option = args[2]
                 conn.send(str.encode(CONVERT(number, option)))
             elif kerkesa == "GCF":
@@ -179,7 +181,7 @@ def ThreadedServer(conn, address):
             elif kerkesa == "PASSWORD":
                 size = args[1]
                 conn.send(str.encode(str(password(size))))
-    except (ConnectionError, ConnectionRefusedError, ConnectionAbortedError, ConnectionResetError) as msg:
+    except (ConnectionError, ConnectionRefusedError, ConnectionAbortedError, ConnectionResetError, ValueError) as msg:
         print("Connection error: ", msg)
 
 
@@ -219,11 +221,10 @@ socketBinding()
 # Accepting client requests
 while True:
     conn, address = TCPserver.accept()
-    print('---------------------------------------')
-    print('Klienti u lidh me %s me portin %s' % address)
-    th = threading.Thread(target=ThreadedServer,
-                          args=(conn, address))  # Klientet e lidhur i pason tek metoda ThreadedServer,
-    th.start()  # e cila na ndihmon qe t'i sherbejme disa klienteve ne te njejten kohe
+    print("---------------------------------------")
+    print("Eshte krijuar lidhja me klientin me IP: %s dhe Port %s" % address)
+    th = threading.Thread(target=ThreadedServer, args=(conn, address))  # Klientet e lidhur i pason tek metoda ThreadedServer,
+    th.start()                                            # e cila na ndihmon qe t'i sherbejme disa klienteve ne te njejten kohe
     print("\nKliente aktiv: ",
           threading.activeCount() - 1)  # Na jep numrin e klienteve aktiv ne server, sa here qe kycet ndonje klient
 
