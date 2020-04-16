@@ -1,5 +1,4 @@
 import socket
-
 import random
 import string
 from time import localtime, strftime
@@ -119,7 +118,10 @@ def CALCULATE(x, op,
 def password(gjatesia):
     gjatesia = int(gjatesia)
     chars = string.ascii_letters + string.digits + string.punctuation
-    return ''.join(random.choice(chars) for _ in range(gjatesia))
+    lista = []
+    for x in range(gjatesia):
+        lista.append(random.choice(chars))
+    return ''.join(lista)
 
 
 # ----------------------------------------------------------------------------------------
@@ -163,13 +165,15 @@ while True:
         dataRecieved, address = UDPserver.recvfrom(128)
         data = dataRecieved.decode()
         data = data.upper()
-        print("\nKerkesa: " + data)
+        print("\nKerkesa nga klienti me IP: '" + str(address[0]) + "', dhe Port: " + str(address[1]) + "\n" + data)
 
         args = data.split()
         gjatesia = len(args)
         kerkesa = args[0]
 
-        if kerkesa == "IPADDRESS":
+        if kerkesa == "TEST":
+            continue
+        elif kerkesa == "IPADDRESS":
             pergjigjja = "IP Adresa e klientit eshte: " + str(IPADDRESS(address))
             UDPserver.sendto(pergjigjja.encode(), address)
         elif kerkesa == "PORT":
@@ -181,18 +185,18 @@ while True:
             UDPserver.sendto(GAME().encode(), address)
         elif kerkesa == "EXIT":
             print("Lidhja me klientin eshte shkeputur.")
-            break
+            continue
         elif kerkesa == "COUNT":
             text = data[len(kerkesa):]
             UDPserver.sendto(COUNT(text).encode(), address)
         elif kerkesa == "REVERSE":
-            text = args[1]
+            text = data[len(kerkesa):]
             UDPserver.sendto(REVERSE(text).encode(), address)
         elif kerkesa == "PALINDROME":
             text = args[1]
             UDPserver.sendto(PALINDROME(text).encode(), address)
         elif kerkesa == "CONVERT":
-            number = int(args[1])
+            number = float(args[1])
             option = args[2]
             UDPserver.sendto(CONVERT(number, option).encode(), address)
         elif kerkesa == "GCF":
