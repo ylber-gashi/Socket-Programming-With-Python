@@ -9,6 +9,7 @@ def socketCreate():
         HOST = input("Jepni IP Adresen (Default - localhost): \n")
         PORT = int(input("Jepni portin (Default - 13000): \n"))
         UDPclient = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        UDPclient.sendto("test".encode(), (HOST, PORT))
     except (socket.error, ValueError, OverflowError) as err:
         print("Error while creating socket: ", err)
         socketCreate()
@@ -34,7 +35,7 @@ print("\t\t\t\t\t\tFIEK UDP\n"
 methods = ["ipaddress", "port", "count", "reverse", "palindrome", "time", "game", "gcf", "convert", "calculate",
            "password", "exit", "0"]
 soloMethods = ["ipaddress", "port", "time", "game"]
-convertOptions = ["cmtofeet", "feettocm", "kmtomile", "milestokm"]
+convertOptions = ["cmtofeet", "feettocm", "kmtomiles", "milestokm"]
 operators = ["+", "-", "*", "/", "^", "%"]
 
 
@@ -76,13 +77,13 @@ while True:
             print("Invalid request...\n")
             continue
 
-    elif len(listed) < 4 and listed[0] == "gcf" and is_num(listed[1]) and is_num(listed[2]):
+    elif len(listed) == 3 and listed[0] == "gcf" and is_num(listed[1]) and is_num(listed[2]):
         UDPclient.sendto(kerkesa.encode(), (HOST, PORT))
 
-    elif len(listed) > 1 and listed[0] == "convert" and is_num(listed[1]) and listed[2] in convertOptions:
+    elif len(listed) == 3 and listed[0] == "convert" and is_num(listed[1]) and listed[2] in convertOptions:
         UDPclient.sendto(kerkesa.encode(), (HOST, PORT))
 
-    elif listed[0] == "password" and listed[1].isdigit():
+    elif len(listed) == 2 and listed[0] == "password" and listed[1].isdigit():
         UDPclient.sendto(kerkesa.encode(), (HOST, PORT))
 
     elif listed[0] == "0":
