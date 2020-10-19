@@ -125,7 +125,7 @@ def password(gjatesia):
     return ''.join(lista)
 
 
-# ----------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------
 
 # Funksioni me ane te cilit e mundesojme casjen disa klienteve njekohesisht ne server
 # Ky funksion thirret nga funksioni run() i modulit threading kur ne e bejme start() thread-in
@@ -189,7 +189,7 @@ try:
     HOST = 'localhost'
     PORT = 13000
     print("\n\t\t\t\t\t\tFIEK TCP Server\n"
-          "--------------------------------------------------------------\n")
+          "----------------------------------------------------------\n")
     TCPserver = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print("\nSocket is being created...")
 except socket.error as err:
